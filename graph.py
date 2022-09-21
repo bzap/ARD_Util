@@ -1,6 +1,7 @@
 import os
 import pickle
 from word_freq import word_freq
+from random import sample
 
 
 # Save an object as a pickle file; a compressed version
@@ -24,8 +25,7 @@ class Node:
 	def get_neighbors(self):
 		return self.neighbors
 
-# Returns the top 10 most used words in reviews for
-# each book.
+# Returns the top 10 most used words in reviews for each book
 def find_top_10(topItems, excludedList):
 	top5 = {}
 	for asin in topItems:
@@ -45,7 +45,6 @@ def find_top_10(topItems, excludedList):
 
 # Returns a dictionary of structure
 # word:[list of asins whose reviews use that word], ...
-
 def find_common_words(top5):
 	commonWords = {}
 
@@ -56,6 +55,8 @@ def find_common_words(top5):
 			else:
 				commonWords[word] = [asin]
 	return commonWords
+
+
 
 # Creates the adjacency list representation of the
 # graph which is used for computing similar books.
@@ -72,8 +73,7 @@ def make_graph(top5, commonWords):
 
 	return nodes
 
-def main():
-
+def create_samples(asin):
 	# A list of words with no significance for
 	# reader sentiment. These will be excluded from
 	# common word comparisons between book reviews.
@@ -88,21 +88,36 @@ def main():
 				'ending', 'two', 'them', 'people', 'reading', 'time', 'well', 'were', 'these', 'wait', 'because',
 				'through', 'dont', 'down', 'didnt', 'cant', 'know', 'men', 'could', 'three']
 
-	data = load_pkl('pickles/data.pkl')
-	asins = load_pkl('pickles/asinCounts.pkl')
 	topItems = load_pkl('pickles/topItems.pkl')
 	
 	top5 = find_top_10(topItems, excludedList)
 	commonWords = find_common_words(top5)
+	#print(commonWords)
+	#print('')
+	#print(commonWords['loved'])
 	graph = make_graph(top5, commonWords)
 
-	return graph
+	
+	#print(graph)
 
-if __name__ == "__main__":
-	graph = main()
-	unsorted = [(x, len(graph[x].get_neighbors())) for x in graph]
-	unsorted.sort(key=lambda x: x[1],reverse=True)
-	print("Other books with similar keywords: ")
-	for i in unsorted[:10]:
-		print("ASIN: " + str(i[0]) + " with " + str(i[1]) + " occurences of words")
+	return sample(graph[asin].get_neighbors(), 10)
+
+#def filter(asin): 
+	#graph = main()
+	#unsorted = [(x, len(graph[x].get_neighbors())) for x in graph]
+
+	
+
+	#print(sample(graph['0001844423'].get_neighbors(), 10))
+	
+	
+	#for x in graph: 
+	#	print(graph[x].get_neighbors())
+	#unsorted.sort(key=lambda x: x[1],reverse=True)
+	
+	#print("Other books with similar keywords: ")
+	#for i in unsorted[:20]:
+	#	print("ASIN: " + str(i[0]) + " with " + str(i[1]) + " occurences of words")
+	
+#create()
 	
