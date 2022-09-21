@@ -8,7 +8,7 @@ class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.samples = []
-        self.setWindowTitle("Amazon Review Dataset Utility")
+        self.setWindowTitle("ARD Util")
         self.layout = QtWidgets.QVBoxLayout(self)
         self.tab_collection = QtWidgets.QTabWidget()
         self.asin_tab = QtWidgets.QWidget()
